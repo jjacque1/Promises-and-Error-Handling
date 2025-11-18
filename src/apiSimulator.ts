@@ -1,6 +1,6 @@
 //================FETCH PRODUCT CATALOG========================
 
-const fetchProductCatalog = function (): Promise<
+export const fetchProductCatalog = function (): Promise<
   { id: number; name: string; price: number }[]
 > {
   return new Promise(function (resolve, reject) {
@@ -20,7 +20,7 @@ const fetchProductCatalog = function (): Promise<
 
 //=================FETCH PRODUCT REVIEW=========================
 
-const fetchProductReviews = function (
+export const fetchProductReviews = function (
   productId: number
 ): Promise<{ Id: number; ratings: number; review: string }[]> {
   return new Promise(function (resolve, reject) {
@@ -41,7 +41,7 @@ const fetchProductReviews = function (
 //==================FETCH SALES REPORT==============================
 
 
-const fetchSalesReport = function (
+export const fetchSalesReport = function (
   salesReport: number
 ): Promise<{ totalSales: string; unitSold: number; averagePrice: string }[]> {
   return new Promise(function (resolve, reject) {
@@ -62,43 +62,3 @@ const fetchSalesReport = function (
 };
 
 
-//========IMPLEMENT ERROR HANDLING ON fetchProductCatalog===============
-
-fetchProductCatalog()
-.then(function (catalog) {
-    console.log("Product Catalog:", catalog);
-})
-.catch(function (error) {
-    console.log("Catalog Error:", error)
-})
-.finally(function () {
-    console.log("fetchProductCatalog has been attempted")
-})
-
-
-//========IMPLEMENT ERROR HANDLING ON fetchProductReviews===============
-
-fetchProductReviews(1)
-.then(function (reviews) {
-    console.log("Product Reviews:", reviews);
-})
-.catch(function (error) {
-    console.log("Reviews Error:", error)
-})
-.finally(function () {
-    console.log("fetchProductReviews has been attempted")
-})
-
-
-//========IMPLEMENT ERROR HANDLING ON fetchSalesReport===============
-
-fetchSalesReport(5)
-  .then(function (salesReport) {
-    console.log("Sales Report:", salesReport);
-  })
-  .catch(function (error) {
-    console.log("Sales Report Error:", error);
-  })
-  .finally(function () {
-    console.log("fetchSalesReport has been attempted.");
-  });
