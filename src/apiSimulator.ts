@@ -41,7 +41,7 @@ export const fetchProductCatalog = (): Promise<
 export const fetchProductReviews = (
   productId: number
 ): Promise<
-  { id: number; user: string; review: string; price: string | number }[]
+  { id: number; product: string; user: string; review: string; price: string | number }[]
 > => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
@@ -49,12 +49,14 @@ export const fetchProductReviews = (
         resolve([
           {
             id: 1,
+            product: "Desktop",
             user: "jjacque",
             review: "This prouct is NOT worth the price.",
             price: "$200.00,",
           },
           {
             id: 2,
+            product: "laptop",
             user: "BobbyJoe",
             review: "I liked the product, it was exactly what was expected.",
             price: "$1200",
@@ -67,6 +69,18 @@ export const fetchProductReviews = (
   });
 };
 
+//===============TESTING TESTING TESTING====================
+
+fetchProductReviews(2)
+.then((reviews) => {
+    console.log("Reviews success:", reviews)
+})
+.catch((error) => {
+    console.log("Review Error:", error)
+})
+
+
+
 //======================FETCH SALES REPORT=======================
 
 export function fetchSalesReport(): Promise<
@@ -78,7 +92,7 @@ export function fetchSalesReport(): Promise<
 > {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      if (Math.random() < 0.5) {
+      if (Math.random() < 0.9) {
         resolve([
           {
             totalSales: "$5,000",
@@ -94,3 +108,12 @@ export function fetchSalesReport(): Promise<
 }
 
 
+//===============TESTING TESTING TESTING====================
+
+fetchSalesReport()
+.then((report) => {
+    console.log("Report success:", report)
+})
+.catch((error) => {
+    console.log("Report Error:", error)
+})
