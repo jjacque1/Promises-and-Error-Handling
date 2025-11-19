@@ -1,110 +1,96 @@
-//================= CUSTOM ERROR CLASSES =======================
+//==========Part 4: Custom Error Classes====================================
 
 export class NetworkError extends Error {
   constructor(message: string) {
-    // Accept an error message
-    super(message); // Pass message to the built-in Error class
-    this.name = "NetworkError"; // Set the name of the error type
+    super(message);
+    this.name = "NetworkError";
   }
 }
 
-// Create a custom error class for data-related failures
 export class DataError extends Error {
   constructor(message: string) {
-    // Accept an error message
-    super(message); // Pass message to the built-in Error class
-    this.name = "DataError"; // Set the name of the error type
+    super(message);
+    this.name = "DataError";
   }
 }
 
-//================FETCH PRODUCT CATALOG========================
 
-export const fetchProductCatalog = function (): Promise<
-  { id: number; name: string; price: number }[] // This Promise resolves to an array of product objects
-> {
-  return new Promise(function (resolve, reject) {
-    // Create a new Promise
-    setTimeout(function () {
-      // Delay execution to simulate a slow network request
+// =====================Part 2: API Simulation Functions====================
+
+//=======================FETCH PRODUCT CATALOG====================
+
+export const fetchProductCatalog = (): Promise<
+  { id: number; name: string; price: string | number }[]
+> => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
       if (Math.random() < 0.8) {
-        // 80% chance of success
         resolve([
-          { id: 1, name: "Laptop", price: 1200 }, // First product
-          { id: 2, name: "Headphones", price: 200 }, // Second product
+          { id: 1, name: "Laptop", price: 1200 },
+          { id: 2, name: "Headphones", price: 200 },
         ]);
       } else {
-        // 20% chance of failure
-        reject(new NetworkError("Failed to fetch product catalog")); // Reject with custom network error
+        reject(new NetworkError("Failed to fetch product catalog"));
       }
-    }, 1000); // Simulate 1 second delay
+    }, 1000);
   });
 };
 
-//=================FETCH PRODUCT REVIEW=========================
+// -====================fetchProductReviews()========================
 
-export const fetchProductReviews = function (
-  // Define a function that simulates fetching reviews for a specific product
-  productId: number // The product ID being requested
-): Promise<{ Id: number; ratings: number; review: string }[]> {
-  // Promise resolves to an array of reviews
-  return new Promise(function (resolve, reject) {
-    // Create a new Promise
-    setTimeout(function () {
-      // Add delay to simulate network lag
-      if (productId <= 0) {
-        // If an invalid ID was provided
-        reject(new DataError(`Invalid product ID: ${productId}`)); // Reject with custom data error
-        return; // Stop execution
-      }
-
-      if (Math.random() < 0.7) {
-        // 70% chance of success
-        resolve([
-          { Id: productId, ratings: 5, review: "Above adverage product" }, // First review
-          { Id: productId, ratings: 4, review: "Below Adverage product" }, // Second review
-        ]);
-      } else {
-        // 30% chance of failure
-        reject(
-          new NetworkError( // Reject with custom network error
-            `Failed to fetch reviews for product ID ${productId}`
-          )
-        );
-      }
-    }, 1500); // Simulate 1.5-second delay
-  });
-};
-
-//==================FETCH SALES REPORT==============================
-
-export const fetchSalesReport = function (
-  // Define a function that simulates retrieving a sales report
-  salesReport: number // A number that controls the sales data
-): Promise<{ totalSales: string; unitSold: number; averagePrice: string }[]> {
-  return new Promise(function (resolve, reject) {
-    // Create a Promise
-    setTimeout(function () {
-      // Simulate server delay
-      // Data-related issue
-      if (salesReport <= 0) {
-        // Check for invalid input
-        reject(new DataError(`Invalid sales report value: ${salesReport}`)); // Reject with data error
-        return;
-      }
-
-      if (Math.random() < 0.7) {
-        // 70% chance of success
+export const fetchProductReviews = (
+  productId: number
+): Promise<
+  { id: number; user: string; review: string; price: string | number }[]
+> => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (Math.random() > 0.7) {
         resolve([
           {
-            totalSales: `$${salesReport * 1000}`, // Calculate total sales
-            unitSold: salesReport * 10, // Units sold
-            averagePrice: `$${(salesReport * 1000) / (salesReport * 10)}`, // Sales ÷ units
+            id: 1,
+            user: "jjacque",
+            review: "This prouct is NOT worth the price.",
+            price: "$200.00,",
+          },
+          {
+            id: 2,
+            user: "BobbyJoe",
+            review: "I liked the product, it was exactly what was expected.",
+            price: "$1200",
           },
         ]);
       } else {
-        // 30% chance of failure
-        reject(new NetworkError(`Failed to fetch sales report`)); // Reject with custom error
+        reject(new DataError(`Failed to fetch reviews for product ID: ${productId}`));
       }
-    }, 1500); // Delay of 1.5 seconds
+    }, 1500);
   });
 };
+
+//======================FETCH SALES REPORT=======================
+
+export function fetchSalesReport(): Promise<
+  {
+    totalSales: string | number;
+    unitSold: string | number;
+    averagePrice: string | number;
+  }[]
+> {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (Math.random() < 0.5) {
+        resolve([
+          {
+            totalSales: "$5,000",
+            unitSold: "5 units",
+            averagePrice: "$1,000",
+          },
+        ]);
+      } else {
+        reject(new NetworkError("Failed to fetch sales report"));
+      }
+    }, 1000);
+  });
+}
+
+

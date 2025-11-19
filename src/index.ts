@@ -1,67 +1,77 @@
+//===============PART 3: BUILD THE MAIN APPLICATION LOGIC=============
+
+
+// Import the three API simulation functions from apiSimulator.ts.
+// These functions each return a Promise that either resolves with data
+// or rejects with an error.
 import {
-  fetchProductCatalog, // Import the function that fetches product catalog data
-  fetchProductReviews, // Import the function that fetches product reviews
-  fetchSalesReport, // Import the function that fetches the sales report
-} from "./apiSimulator"; // All these functions come from apiSimulator.ts
+  fetchProductCatalog,
+  fetchProductReviews,
+  fetchSalesReport,
+} from "./apiSimulator.js";
 
-// Main function that will run the application logic
-function runApplication(): void {
+// Define a function named fetchData.
+// This function will run all API calls in sequence using Promise chaining.
+function fetchData(): void {
 
+  // 1. Start by fetching the product catalog.
+  // fetchProductCatalog() returns a Promise.
+  fetchProductCatalog()
+    // .then() runs ONLY if the Promise was successful.
+    .then((products) => {
+      // Log the list of products returned from the catalog API.
+      console.log("Product catalog:", products);
+     
+      // For each product, we want to fetch its reviews.
+      // products.map(...) loops through each product and returns an array of Promises.
+      const reviewPromises = products.map((product) =>
+        
+        // For each product, call fetchProductReviews(product.id)
+        // Then attach a .then() to combine the product with its reviews in one object.
+        fetchProductReviews(product.id).then((reviews) => ({
+          product,   // Keep reference to the product
+          reviews,   // Add its reviews
+        }))
+      );
 
-  //========IMPLEMENT ERROR HANDLING ON fetchProductCatalog===============
-
-  fetchProductCatalog() // Call the API function (returns a Promise)
-    .then(function (catalog) {
-      // Runs if the Promise resolves successfully
-      console.log("Product Catalog:", catalog); // Log the product catalog to the consol
+      // Promise.all(reviewPromises) waits for ALL review Promises to finish.
+      // It returns ONE Promise containing an array of results.
+      return Promise.all(reviewPromises);
     })
-    .catch(function (error) {
-      // Runs if the Promise rejects (error occurs)
-      console.log("Catalog Error:", error); // Display the error message
+
+    // This .then() runs after ALL product reviews are fetched.
+    .then((productsWithReviews) => {
+
+      // Loop through each product with reviews result.
+      productsWithReviews.forEach(({ product, reviews }) => {
+        // Log the product name and its list of reviews.
+        console.log(`Product: ${product.name}, Review: ${reviews}`);
+      });
+
+      // After logging products + reviews, fetch the sales report.
+      // fetchSalesReport() also returns a Promise.
+      return fetchSalesReport();
     })
-    .finally(function () {
-      // Runs no matter what (success or failure)
-      console.log("fetchProductCatalog has been attempted"); // Status message
-    });
 
-
-
-  //========IMPLEMENT ERROR HANDLING ON fetchProductReviews===============
-
-  fetchProductReviews(1) // Call the API function with productId = 1
-    .then(function (reviews) {
-      // Runs if Promise resolves
-      console.log("Product Reviews:", reviews); // Display reviews for product 1
+    // This .then() handles the result of fetchSalesReport().
+    .then((salesReport) => {
+      // Log the sales report to the console.
+      console.log("Sales report:", salesReport);
     })
-    .catch(function (error) {
-      // Runs if Promise rejects
-      console.log("Reviews Error:", error); // Display error message
+
+    // .catch() runs ONLY if ANY Promise failed above.
+    // It catches errors from ANY of the API calls (catalog, reviews, or sales report).
+    .catch((error) => {
+      console.error("An error occurred during API calls:", error);
     })
-    .finally(function () {
-      // Runs no matter what
-      console.log("fetchProductReviews has been attempted"); // Status message
-    });
 
-
-
-
-  //========IMPLEMENT ERROR HANDLING ON fetchSalesReport===============
-
-  fetchSalesReport(5) // Call the API function with salesReport = 5
-    .then(function (salesReport) {
-      // Runs when Promise resolves
-      console.log("Sales Report:", salesReport); // Display the sales report
-    })
-    .catch(function (error) {
-      // Runs if Promise rejects
-
-      console.log("Sales Report Error:", error); // Display error message
-    })
-    .finally(function () {
-      // Always runs at the end
-      console.log("fetchSalesReport has been attempted."); // Status message
+    // .finally() runs NO MATTER WHAT — success or failure.
+    // It always executes after the chain is complete.
+    .finally(() => {
+      console.log("All API calls have been attempted.");
     });
 }
 
-// Call the main function so the application actually runs
-runApplication();
+// Call (execute) the fetchData function.
+// If this line is removed, nothing in the file will run.
+fetchData();
