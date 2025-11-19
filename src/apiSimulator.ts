@@ -45,7 +45,7 @@ export const fetchProductReviews = (
 > => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      if (Math.random() > 0.7) {
+      if (Math.random() < 0.5) {
         resolve([
           {
             id: 1,
@@ -71,7 +71,7 @@ export const fetchProductReviews = (
 
 //===============TESTING TESTING TESTING====================
 
-fetchProductReviews(2)
+fetchProductReviews(0)
 .then((reviews) => {
     console.log("Reviews success:", reviews)
 })
@@ -92,7 +92,7 @@ export function fetchSalesReport(): Promise<
 > {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      if (Math.random() < 0.9) {
+      if (Math.random() < 0.5) {
         resolve([
           {
             totalSales: "$5,000",

@@ -39,7 +39,7 @@ exports.fetchProductCatalog = fetchProductCatalog;
 const fetchProductReviews = (productId) => {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
-            if (Math.random() > 0.7) {
+            if (Math.random() < 0.5) {
                 resolve([
                     {
                         id: 1,
@@ -65,7 +65,7 @@ const fetchProductReviews = (productId) => {
 };
 exports.fetchProductReviews = fetchProductReviews;
 //===============TESTING TESTING TESTING====================
-(0, exports.fetchProductReviews)(2)
+(0, exports.fetchProductReviews)(0)
     .then((reviews) => {
     console.log("Reviews success:", reviews);
 })
@@ -76,7 +76,7 @@ exports.fetchProductReviews = fetchProductReviews;
 function fetchSalesReport() {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
-            if (Math.random() < 0.9) {
+            if (Math.random() < 0.5) {
                 resolve([
                     {
                         totalSales: "$5,000",
